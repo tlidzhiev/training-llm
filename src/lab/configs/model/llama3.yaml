@@ -1,0 +1,12 @@
+# Llama3Config arguments; vocab_size, max_position_embeddings and the special tokens
+# are set in train.py from the tokenizer and dataset.max_seq_len.
+name: llama3
+hidden_size: 768
+intermediate_size: 2048
+num_hidden_layers: 12
+num_attention_heads: 12
+num_key_value_heads: 4
+rope_theta: 500000.0
+rms_norm_eps: 1.0e-5
+initializer_range: 0.02
+tie_word_embeddings: true

@@ -1,0 +1,8 @@
+project_name: training-llm
+run_name: test
+workspace: null # your cometml username or team name
+run_id: null # set to resume a specific run
+id_length: 32 # length of the generated run id (Comet requires 32-50 alphanumeric chars)
+mode: offline # online, offline
+log_assets: false
+log_dir: logs/${writer.project_name}/${writer.run_name}

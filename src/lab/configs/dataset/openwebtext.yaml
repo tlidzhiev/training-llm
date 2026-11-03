@@ -1,0 +1,10 @@
+dataset_name: ashaba1in/small_openwebtext
+tokenizer: mistralai # short name from lab.dataset.openwebtext.TOKENIZERS or any HF id
+max_seq_len: 1024
+val_size: 0.005 # fraction (< 1) or number (>= 1) of documents held out for validation
+split_seed: 123 # seed of the train/val split; keep it the same for compared models
+save_dir: null # null uses data/<dataset>/<tokenizer>-val<val_size>-seed<split_seed>
+force_rebuild: false # re-tokenize even if the token streams already exist
+num_proc: null # null uses all but two CPU cores
+limit: null # null or a number of train windows to keep
+val_limit: null # null or a number of val windows to keep

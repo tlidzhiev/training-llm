@@ -1,0 +1,66 @@
+hydra:
+  run:
+    dir: ${writer.log_dir}
+
+defaults:
+  - _self_
+  - dataset: openwebtext
+  - model: llama3
+  - writer: comet
+
+override: false # Delete the run directory if it already holds a run
+resume_from_checkpoint: null # Checkpoint path (or true for the last one) to resume from
+
+training_args:
+  output_dir: ${writer.log_dir}/checkpoints
+  run_name: ${writer.run_name}
+  seed: 42
+  data_seed: 24
+  report_to: comet_ml
+
+  num_train_epochs: 1
+  max_steps: -1
+
+  # Batching. The global batch is
+  # per_device_train_batch_size * gradient_accumulation_steps * num_devices
+  per_device_train_batch_size: 16
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 16
+  dataloader_num_workers: 4
+  dataloader_pin_memory: true
+  dataloader_drop_last: false
+
+  optim: adamw_torch_fused
+  learning_rate: 6.0e-4
+  adam_beta1: 0.9
+  adam_beta2: 0.95
+  weight_decay: 0.1
+  max_grad_norm: 1.0
+  lr_scheduler_type: cosine_with_min_lr
+  lr_scheduler_kwargs:
+    min_lr_rate: 0.1
+  warmup_steps: 0.05
+
+  # Precision and compilation
+  bf16: true
+  fp16: false
+  tf32: true
+  torch_compile: true
+  torch_compile_mode: null # "default" | "reduce-overhead" | "max-autotune"
+
+  # Logging, evaluation, and checkpointing
+  logging_steps: 10
+  logging_first_step: true
+  include_num_input_tokens_seen: all # log the number of tokens seen
+  eval_strategy: steps # "no" | "steps" | "epoch"
+  eval_steps: 500
+  save_strategy: steps # "no" | "steps" | "epoch"
+  save_steps: 500
+  save_total_limit: 2
+  load_best_model_at_end: false
+
+  # Hugging Face Hub
+  push_to_hub: false
+  hub_model_id: null
+  hub_strategy: every_save
+  hub_private_repo: false
