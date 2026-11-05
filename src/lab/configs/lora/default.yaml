@@ -1,0 +1,6 @@
+# Arguments of peft.LoraConfig (task_type is set in lab.model.pretrained)
+r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules: all-linear # or a list, e.g. [q_proj, v_proj]
+bias: none

@@ -1,0 +1,7 @@
+dataset_name: bigbio/med_qa
+config_name: med_qa_en_4options_source # USMLE, English, 4 options
+max_seq_len: 1024 # train examples longer than this are dropped; val and test are never filtered
+num_proc: 4
+limit: null # null or a number of train examples to keep
+val_limit: null # null or a number of val examples to keep
+test_limit: null # null or a number of test examples to keep

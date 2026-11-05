@@ -1,0 +1,64 @@
+hydra:
+  run:
+    dir: ${writer.log_dir}
+
+defaults:
+  - _self_
+  - dataset: medqa
+  - model: qwen25_1_5b
+  - lora: null # null = full fine-tuning; LoRA: lora=default
+  - writer: comet
+
+override: false # Delete the run directory if it already holds a run
+resume_from_checkpoint: null # Checkpoint path (or true for the last one) to resume from
+
+training_args:
+  output_dir: ${writer.log_dir}/checkpoints
+  run_name: ${writer.run_name}
+  seed: 42
+  data_seed: 24
+  report_to: comet_ml
+  label_names: [labels]
+  remove_unused_columns: false
+
+  num_train_epochs: 2
+  max_steps: -1
+
+  # Batching. The global batch is
+  # per_device_train_batch_size * gradient_accumulation_steps * num_devices
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 4
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  dataloader_num_workers: 2
+  dataloader_pin_memory: true
+
+  optim: adamw_torch_fused
+  learning_rate: 1.0e-5 # full fine-tuning; LoRA needs ~2e-4: training_args.learning_rate=2e-4
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  lr_scheduler_type: cosine
+  warmup_steps: 0.03
+
+  # Precision and compilation
+  bf16: true
+  fp16: false
+  tf32: true
+  torch_compile: false # batches have variable lengths, which causes recompilations
+
+  # Logging, evaluation, and checkpointing
+  logging_steps: 10
+  logging_first_step: true
+  eval_strategy: steps # "no" | "steps" | "epoch"
+  eval_steps: 100
+  save_strategy: epoch # "no" | "steps" | "epoch"
+  save_total_limit: 1
+  load_best_model_at_end: false
+
+  # Hugging Face Hub
+  push_to_hub: false
+  hub_model_id: null
+  hub_strategy: every_save
+  hub_private_repo: false
